@@ -29,6 +29,6 @@ If the output_path does not exist, it will be created. In it will be placed the 
   * A <h,w,3> numpy array with channel 0,1,2 being U, V, valid flag components of the flow field 
   * If the `-bidi` flag is invoked, the code will compute 2 flow fields: img1->img2 and img2->img1 and will mark as 'invalid' all correspondences with inconsistent matchings (i.e. >1 pixels apart)
 * cost.pickle - 
-  *   * A <h,w> numpy array containing the matching cost per match
+  * A <h,w> numpy array containing the matching cost per match
 * descs.pickle - 
-  * a list with two <h,w,#d> numpy arrays, the first contains descriptors per each pixel of img1, and the second the same for img2
+  * A list with two <h,w,#d> numpy arrays, the first contains descriptors per each pixel of img1, and the second the same for img2
