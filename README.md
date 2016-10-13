@@ -1,10 +1,9 @@
 PatchBatch - a Batch Augmented Loss for Optical Flow
 ====================================================
+This is an initial commit implementing *PatchBatch - a Batch Augmented Loss for Optical Flow* by Dedi Gadot and Lior Wolf from Tel Aviv University ([link](http://www.cv-foundation.org/openaccess/content_cvpr_2016/html/Gadot_PatchBatch_A_Batch_CVPR_2016_paper.html)), published at **CVPR, 2016**.  
+The code was developed on Ubuntu 14.04, using Theano+Lasagne+OpenCV. You can see the performance it achieved on the [KITTI2012](http://www.cvlibs.net/datasets/kitti/eval_stereo_flow.php?benchmark=flow), [KITTI2015](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow) and [MPI-Sintel](http://sintel.is.tue.mpg.de/) optical flow scoreboards.  
 
-This is an initial commit implementing *PatchBatch - a Batch Augmented Loss for Optical Flow* by Dedi Gadot and Lior Wolf from Tel Aviv University ([link](http://www.cv-foundation.org/openaccess/content_cvpr_2016/html/Gadot_PatchBatch_A_Batch_CVPR_2016_paper.html))
-The code was developed on Ubuntu 14.04, using Theano+Lasagne+OpenCV. You can see the performance it achieved on the [KITTI2012](http://www.cvlibs.net/datasets/kitti/eval_stereo_flow.php?benchmark=flow), [KITTI2015](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow) and [MPI-Sintel](http://sintel.is.tue.mpg.de/) optical flow scoreboards.
-
-For now only the ACCURATE network weights have been uploaded and implemented in this repository, the FAST weights will follow.
+For now only the ACCURATE networks have been iuploaded, the FAST networks will follow.
 
 Installation Instructions
 -------------------------
@@ -17,10 +16,8 @@ Installation Instructions
 
 Usage
 -----
-To run the PatchBatch pipeline, use the following syntax:
-
-`python patchbatch.py <img1_filename> <img2_filename> <output_path> [optional -bidi]`
-
+To run the PatchBatch pipeline, use the following syntax:  
+`python patchbatch.py <img1_filename> <img2_filename> <output_path> [optional -bidi]`  
 If the output_path does not exist, it will be created and in it will be placed the following files:
 * flow.pickle - a <h,w,3> numpy array with channel 0,1,2 being U, V, valid flag components of the flow field.
 If the `--bidi` flag is invoked, the code will compute 2 flow fields: img1->img2 and img2->img1 and will mark as 'invalid' all correspondences with inconsistent matchings (i.e. >1 pixels apart).
