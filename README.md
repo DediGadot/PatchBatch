@@ -22,7 +22,7 @@ To run the PatchBatch pipeline, use the following syntax:
 `python patchbatch.py <img1_filename> <img2_filename> <output_path> [optional -bidi]`
 
 If the output_path does not exist, it will be created and in it will be placed the following files:
-(a) flow.pickle - a <h,w,3> numpy array with channel 0,1,2 being U, V, valid flag components of the flow field.
+* flow.pickle - a <h,w,3> numpy array with channel 0,1,2 being U, V, valid flag components of the flow field.
 If the `--bidi` flag is invoked, the code will compute 2 flow fields: img1->img2 and img2->img1 and will mark as 'invalid' all correspondences with inconsistent matchings (i.e. >1 pixels apart).
-(b) descs.pickle - a list with two <h,w,#d> numpy arrays, the first contains descriptors per each pixel of img1, and the second the same for img2. 
+* descs.pickle - a list with two <h,w,#d> numpy arrays, the first contains descriptors per each pixel of img1, and the second the same for img2. 
 
