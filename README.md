@@ -19,7 +19,8 @@ Usage
 To run the PatchBatch pipeline, use the following syntax:  
 `python patchbatch.py <img1_filename> <img2_filename> <model_name> <output_path> [optional -bidi]`  
 
-Current supported models:
+Currently supported models:
+* KITTI2012_CENTSD
 * KITTI2015_CENTSD
 
 If the output_path does not exist, it will be created. In it will be placed the following:  
