@@ -8,6 +8,9 @@ import pb_utils as utils
 import patchmodule
 import kittitool
 import matplotlib.pyplot as pyplot
+import argparse
+import os
+import cPickle as pickle
 
 DEBUG = True
 
@@ -74,10 +77,8 @@ def calc_patchmatch_and_cost(img1_descs, img2_descs, pm_params, both = False):
     return res
 
 
-def calc_flow_and_cost(img1_filename, img2_filename, net_name, eliminate_bidi_errors = False):
-    img1_descs, img2_descs = calc_descs(img1_filename, img2_filename, net_name)
-
-    flows_costs = calc_patchmatch_and_cost(img1_descs, img2_descs, pm_params, eliminate_bidi_errors)
+def calc_flow_and_cost(img1_descs, img2_descs, eliminate_bidi_errors = False):
+    flows_costs = calc_patchmatch_and_cost(img1_descs, img2_descs, pm_params, both = eliminate_bidi_errors)
     flows = flows_costs['flow']
     costs = flows_costs['cost']
 
@@ -93,15 +94,32 @@ def calc_flow_and_cost(img1_filename, img2_filename, net_name, eliminate_bidi_er
         flow_res = flows[0]
         cost_res = costs[0]
 
-    return [flow_res, cost_res]
-
-
+    return [flow_res, cost_res, [img1_descs, img2_descs]]
 
 if __name__ == '__main__':
 
-    model_name = 'KITTI2012_CENTSD_ACCURATE'
-    img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
-    img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
+    #parser = argparse.ArgumentParser(description = 'PatchBatch Optical Flow algorithm')
+    #parder.add_argument('img1_filename', help = 'Filename (+path) of the source image')
+    #parser.add_argument('img2_filename', help = 'Filename (+path) of the target image')
+    #parser.add_argumenet('model_name', help = 'Name of network to run')
+    #parser.add_argument('output_path', help = 'Path to where to place the results')
+    #parser.add_argument('--bidi', help 'Run bidirectional consistency test, mark invalid correspondences as such', action='store_true')
 
-    flow_res, cost_res = calc_flow_and_cost(img1_filename, img2_filename, model_name, eliminate_bidi_errors = True)
-    kittitool.flow_visualize(flow_res, mode='Y')
+    #if not os.path.exists(parser.output_path):
+    #    os.mkdir(parser.output_path)
+
+    #model_name = 'KITTI2012_CENTSD_ACCURATE'
+    #img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
+    #img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
+
+    #flow_res, cost_res = calc_flow_and_cost(img1_filename, img2_filename, model_name, eliminate_bidi_errors = True)
+    img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
+    flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], parser.bidi)
+
+    with open(parser.output_path + '/flow_and_cost.pickle','wb') as f:
+        pickle.dump([flow_res, cost_res], f)
+
+    with open(parser.output_path + '/descs.pickle', 'wb') as f:
+        pickle.dump(img_descs, f)
+
+    #kittitool.flow_visualize(flow_res, mode='Y')

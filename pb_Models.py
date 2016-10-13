@@ -13,9 +13,12 @@ border_mode = 'valid'
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 
 # <net_name> : [weights_filename, batchnorm_weights_filename<]
-nets = {'KITTI2012_CENTSD_ACCURATE' : ['model_CENTSD_33conv',
+nets = {'KITTI2015_CENTSD_ACCURATE' : ['model_CENTSD_33conv',
                               cur_dir + '/weights/PAPER_impdrlim3_d512bnD/211015_141323PAPERKITTI2015-model_drlim7_33conv_allconv_neg1_8_m100_epoch4000_adadelta_testsamples800k_impdrlimv3.yaml-best-test-weights.pickle',
-                              cur_dir + '/weights/PAPER_impdrlim3_d512bnD/211015_141323-eparams-test.pickle']}
+                              cur_dir + '/weights/PAPER_impdrlim3_d512bnD/211015_141323-eparams-test.pickle'],
+        'KITTI2012_CENTSD_ACCURATE' : ['model_CENTSD_33conv',
+                                       cur_dir + '/weights/PAPER_impdrlim3_d512bnDkt2012/241015_080511PAPERKITTI2012-model_drlim7_33conv_allconv_neg1_8_m100_epoch4000_adadelta_testsamples800k_impdrlimv3.yaml-best-test-weights.pickle',
+                                       cur_dir + '/weights/PAPER_impdrlim3_d512bnDkt2012/241015_080511-eparams-test.pickle']}
 
 def layer_factory(in_layer,layer_type,**kwargs):
     gpu = True if 'gpu' in theano.config.device else False
