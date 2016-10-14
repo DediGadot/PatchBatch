@@ -108,12 +108,11 @@ if __name__ == '__main__':
     #if not os.path.exists(parser.output_path):
     #    os.mkdir(parser.output_path)
 
-    parser = {}
+    #model_name = 'KITTI2012_CENTSD_ACCURATE'
+    #img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
+    #img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
 
-    parser.model_name = 'KITTI2012_CENTSD_ACCURATE'
-    parser.img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
-    parser.img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
-
+    #flow_res, cost_res = calc_flow_and_cost(img1_filename, img2_filename, model_name, eliminate_bidi_errors = True)
     img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
     flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], parser.bidi)
 
