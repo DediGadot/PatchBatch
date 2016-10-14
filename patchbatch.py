@@ -134,36 +134,40 @@ def calc_flow_and_cost(img1_descs, img2_descs, eliminate_bidi_errors = False):
 
 if __name__ == '__main__':
 
-    #parser = argparse.ArgumentParser(description = 'PatchBatch Optical Flow algorithm')
-    #parder.add_argument('img1_filename', help = 'Filename (+path) of the source image')
-    #parser.add_argument('img2_filename', help = 'Filename (+path) of the target image')
-    #parser.add_argumenet('model_name', help = 'Name of network to run')
-    #parser.add_argument('output_path', help = 'Path to where to place the results')
-    #parser.add_argument('--bidi', help 'Run bidirectional consistency test, mark invalid correspondences as such', action='store_true')
+    parser = argparse.ArgumentParser(description = 'PatchBatch Optical Flow algorithm')
+    parser.add_argument('img1_filename', help = 'Filename (+path) of the source image')
+    parser.add_argument('img2_filename', help = 'Filename (+path) of the target image')
+    parser.add_argument('model_name', help = 'Name of network to run')
+    parser.add_argument('output_path', help = 'Path to where to place the results')
+    parser.add_argument('--bidi', help  = 'Run bidirectional consistency test, mark invalid correspondences as such', action='store_true')
 
-    #if not os.path.exists(parser.output_path):
-    #    os.mkdir(parser.output_path)
+    parser = parser.parse_args()
+
+    if not os.path.exists(parser.output_path):
+        os.mkdir(parser.output_path)
 
 
-    model_name = 'KITTI2012_CENTSD_ACCURATE'
-    img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
-    img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
-    output_path = '/tmp'
+    #model_name = 'KITTI2012_CENTSD_ACCURATE'
+    #img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
+    #img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
+    #output_path = '/tmp'
 
-    img_descs = calc_descs(img1_filename, img2_filename, model_name)
-    flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], True)
+    #img_descs = calc_descs(img1_filename, img2_filename, model_name)
+    #flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], True)
 
-    #img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
-    #flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], parser.bidi)
+    print 'Calculating descriptors...'
+    img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
+    print 'Calculating flow fields and matching cost'
+    flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], parser.bidi)
 
-    if False:
-        with open(parser.output_path + '/flow.pickle','wb') as f:
-            pickle.dump(flow_res, f)
+    print 'Saving outputs to', parser.output_path
+    with open(parser.output_path + '/flow.pickle','wb') as f:
+        pickle.dump(flow_res, f)
 
-        with open(parser.output_path + '/cost.pickle','wb') as f:
-            pickle.dump(cost_res, f)
+    with open(parser.output_path + '/cost.pickle','wb') as f:
+        pickle.dump(cost_res, f)
 
-        with open(parser.output_path + '/descs.pickle', 'wb') as f:
-            pickle.dump(img_descs, f)
+    with open(parser.output_path + '/descs.pickle', 'wb') as f:
+        pickle.dump(img_descs, f)
 
     #kittitool.flow_visualize(flow_res, mode='Y')
