@@ -22,6 +22,11 @@ pm_iters, pm_rs, rand_ann_h, rand_ann_w = pm_params
 
 
 def calc_descs(img1_filename, img2_filename, model_name):
+    """ given two image files and a CNN model name, calculates the dense descriptor tensor of both images
+        img1_filename - full path of source image
+        img2_filename - full path of target image
+        model_name - name of the trained CNN to use, out of the supported models """
+
     net_name, weights_filename, eparams_filename = Models.nets[model_name]
     nn_model, theano_func = NN.get_net_and_funcs(net_name, batch_size, weights_filename, eparams_filename)
 
@@ -29,8 +34,8 @@ def calc_descs(img1_filename, img2_filename, model_name):
     for img_filename in [img1_filename, img2_filename]:
         print 'reading', img_filename
         img = cv2.imread(img_filename, 0)
-        #if DEBUG:
-        #    img = cv2.resize(img, (img.shape[1]/4, img.shape[0]/4))
+        if DEBUG:
+            img = cv2.resize(img, (img.shape[1]/4, img.shape[0]/4))
         h,w = img.shape
         print 'image shape before reflect', img.shape
 
@@ -52,16 +57,37 @@ def calc_descs(img1_filename, img2_filename, model_name):
     return img_descs
 
 def calc_patchmatch_and_cost(img1_descs, img2_descs, pm_params, both = False):
-    """ returns transformed flows """
+    """ Given two descriptor tensors, and PatchMatch params, calculate the ANN
+        img1_descs - <h,w,1,#d> dense descriptor tensor for source image
+        img2_descs - <hw,w,1,#d> dense descriptor tensor for target image
+        pm_params - <x,y,z,w> (see default values above):
+            x - number of PatchMatch iters to do
+            y - number of random searches to do, as part of PatchMatch
+            z - max h value for initial random ANN
+            w - max w value for initial random ANN
+
+        Note: pm_params parameters were empirically identified using a training
+        set on KITTI2012, KITTI2015, MPI-Sintel respectively
+
+        Returns:
+            A dictionary with either one or two flow tensors and either one or
+            two cost tensors, depending on the both argument
+            Flow tensors are <h,w,3>, with the channels being: U,V,valid? """
+
+
     h,w = img1_descs.shape[:2]
 
     print 'calculating patchmatch A->B'
     rand_ann_h, rand_ann_w = pm_params[2:4]
     rand_ann = utils.create_random_ann(h, w, rand_ann_h, rand_ann_w)
     ann_AB, matchcost_AB = patchmodule.patchmatch(img1_descs, img2_descs, numpy.copy(rand_ann),pm_iters = pm_iters, rs_start = pm_rs)
+
+    # transform OF result from image-pixel coordinates to relative pixel values
     annAB_trans = utils.transform_flow(ann_AB)
+    # add a valid channel to the OF tensor
     annAB_trans = numpy.concatenate([annAB_trans, numpy.ones([annAB_trans.shape[0], annAB_trans.shape[1], 1], dtype=numpy.float32)], axis=2)
 
+    # if both: calculate also B->A patchmatch
     if both:
         print 'calculating patchmatch B->A'
         ann_BA, matchcost_BA = patchmodule.patchmatch(img2_descs, img1_descs, numpy.copy(rand_ann),pm_iters = pm_iters, rs_start = pm_rs)
@@ -78,6 +104,16 @@ def calc_patchmatch_and_cost(img1_descs, img2_descs, pm_params, both = False):
 
 
 def calc_flow_and_cost(img1_descs, img2_descs, eliminate_bidi_errors = False):
+    """ Given two descriptor tensors, calculate PatchMatch and return flow + cost
+        img1_descs - <h,w,1,#d> descriptor tensor for the source image
+        img2_descs - <h,w,1,#d> descriptor tensor for the target image
+        eliminate_bidi_errors - if True, mark as invalid correspondences which
+        do not meet the bidirectional consistency check
+
+        Returns:
+            optical flow from source to target, with <U,V,valid?> channels
+            cost tensor describing the matching cost """
+
     flows_costs = calc_patchmatch_and_cost(img1_descs, img2_descs, pm_params, both = eliminate_bidi_errors)
     flows = flows_costs['flow']
     costs = flows_costs['cost']
@@ -94,7 +130,7 @@ def calc_flow_and_cost(img1_descs, img2_descs, eliminate_bidi_errors = False):
         flow_res = flows[0]
         cost_res = costs[0]
 
-    return [flow_res, cost_res, [img1_descs, img2_descs]]
+    return flow_res, cost_res
 
 if __name__ == '__main__':
 
@@ -108,18 +144,26 @@ if __name__ == '__main__':
     #if not os.path.exists(parser.output_path):
     #    os.mkdir(parser.output_path)
 
-    #model_name = 'KITTI2012_CENTSD_ACCURATE'
-    #img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
-    #img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
 
-    #flow_res, cost_res = calc_flow_and_cost(img1_filename, img2_filename, model_name, eliminate_bidi_errors = True)
-    img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
-    flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], parser.bidi)
+    model_name = 'KITTI2012_CENTSD_ACCURATE'
+    img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
+    img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
+    output_path = '/tmp'
 
-    with open(parser.output_path + '/flow_and_cost.pickle','wb') as f:
-        pickle.dump([flow_res, cost_res], f)
+    img_descs = calc_descs(img1_filename, img2_filename, model_name)
+    flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], True)
 
-    with open(parser.output_path + '/descs.pickle', 'wb') as f:
-        pickle.dump(img_descs, f)
+    #img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
+    #flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], parser.bidi)
+
+    if False:
+        with open(parser.output_path + '/flow.pickle','wb') as f:
+            pickle.dump(flow_res, f)
+
+        with open(parser.output_path + '/cost.pickle','wb') as f:
+            pickle.dump(cost_res, f)
+
+        with open(parser.output_path + '/descs.pickle', 'wb') as f:
+            pickle.dump(img_descs, f)
 
     #kittitool.flow_visualize(flow_res, mode='Y')
