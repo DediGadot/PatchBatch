@@ -51,7 +51,7 @@ If the output_path does not exist, it will be created. In it will be placed the 
   * A list with two [h,w,#d] numpy arrays, the first contains descriptors per each pixel of img1, and the second the same for img2
 
 Credits
-=======
+-------
 The PatchBatch pipeline couldn't be achieved without the following great software pieces:
 * [Theano](https://github.com/Theano/Theano)  
 * [Lasagne](https://github.com/Lasagne/Lasagne)  
