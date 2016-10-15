@@ -32,7 +32,7 @@ def flow_read(flow_file):
     return flow
 
 
-def flow_visualize(flow, mode='Y'):
+def flow_visualize(flow, save_filename=None, mode='Y'):
     if mode == 'Y':
         # Ccbcr color wheel
         img = fl.flow_to_image(flow)
@@ -64,7 +64,10 @@ def flow_visualize(flow, mode='Y'):
         img[:, :, 2] = img[:, :, 2] * valid
         # show
         plt.imshow(img)
-        plt.show()
+        if save_filename is not None:
+            plt.savefig(save_filename, bbox_inches='tight')
+        else:
+            plt.show()
 
     return
 
