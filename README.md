@@ -21,14 +21,16 @@ Installation Instructions
 
 The PatchBatch Pipeline
 -----------------------
-The PatchBatch pipeline consists of the following steps:  
-1. Input: two grayscale images, with the same shape  
+The PatchBatch pipeline consists of the following steps:
+
+1. **Input**: two grayscale images, with the same shape  
 2. Calculate descriptors (per each pixel in both images) using the PatchBatch CNN, i.e calculate a [h,w,#dim] tensor per
    image  
 3. Find correspondences between both descriptor tensors using PatchMatch, with an L2 cost function  
 4. Eliminate incorrect assignments using a bidirectional consistency check  
-5. **(Not yet implemented in this repository)** Use the L2 cost + EpicFlow algorithm to interpolate the sparse optical
-   flow field into a dense one (we used the default parameters of EpicFlow)  
+5. **(Not yet implemented in this repository)** Use the L2 costs + EpicFlow algorithm to interpolate the sparse optical
+   flow field into a dense one (we used the default parameters of EpicFlow)
+6. **Outputs**: A->B optical flow field, (optional) descriptors file, cost assignment file
 
 Usage
 -----
