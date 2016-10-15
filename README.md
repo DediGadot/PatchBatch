@@ -18,7 +18,7 @@ Installation Instructions
 
 The PatchBatch Pipeline
 -----------------------
-The PatchBatch pipeline consists of the following steps:
+The PatchBatch pipeline consists of the following steps:  
 1. Input: two grayscale images, with the same shape  
 2. Calculate descriptors (per each pixel in both images) using the PatchBatch CNN, i.e calculate a [h,w,#dim] tensor per
    image  
