@@ -3,6 +3,9 @@ PatchBatch - a Batch Augmented Loss for Optical Flow
 ====================================================
 This is an initial commit implementing **PatchBatch - a Batch Augmented Loss for Optical Flow** by Dedi Gadot and Lior Wolf from Tel Aviv University [(link)](http://www.cv-foundation.org/openaccess/content_cvpr_2016/html/Gadot_PatchBatch_A_Batch_CVPR_2016_paper.html), published at **CVPR, 2016**.  
 
+PatchBatch achieved state-of-the-art results in 2016 on the KITTI (2012+2015) Optical Flow benchmarks and was ranked 6th on
+MPI-Sintel, though ranked 1st for small displacements.
+
 The code was developed on Ubuntu 14.04, using Theano+Lasagne+OpenCV. You can see the performance it achieved on the [KITTI2012](http://www.cvlibs.net/datasets/kitti/eval_stereo_flow.php?benchmark=flow), [KITTI2015](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow) and [MPI-Sintel](http://sintel.is.tue.mpg.de/) optical flow scoreboards.  
 
 For now only the ACCURATE networks have been iuploaded, the FAST network will follow.
