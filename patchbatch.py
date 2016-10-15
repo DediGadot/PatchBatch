@@ -12,7 +12,7 @@ import argparse
 import os
 import cPickle as pickle
 
-DEBUG = True
+DEBUG = False
 
 patch_size = 51
 batch_size = 256
