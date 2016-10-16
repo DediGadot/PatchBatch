@@ -74,6 +74,8 @@ def get_descriptors(nn_model, theano_func, patches, batch_size, patch_size):
 
         min_slice = b* batch_size
         max_slice = min((b+1) * batch_size, patches.shape[0])
+        if min_slice == max_slice:
+            break
         batch_slice = slice(min_slice, max_slice)
 
         cur_patches = patches[batch_slice]

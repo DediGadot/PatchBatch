@@ -175,6 +175,8 @@ if __name__ == '__main__':
     print 'Calculating flow fields and matching cost'
     flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], pm_params, parser.bidi)
 
+    print 'flow coverage percentage: %.2f' % (numpy.sum(flow_res[:,:,2]) / (flow_res.shape[0] * flow_res.shape[1]))
+
     print 'Saving outputs to', parser.output_path
     with open(parser.output_path + '/flow.pickle','wb') as f:
         pickle.dump(flow_res, f)
@@ -186,4 +188,4 @@ if __name__ == '__main__':
         with open(parser.output_path + '/descs.pickle', 'wb') as f:
             pickle.dump(img_descs, f)
 
-    #kittitool.flow_visualize(flow_res, save_filename=parser.output_path + '/flow.png', mode='Y')
+    kittitool.flow_visualize(flow_res, mode='Y')
