@@ -1,4 +1,31 @@
 import numpy
+import matplotlib.pyplot as pyplot
+import cv2
+
+def disp_flow(flow,title=None):
+    pyplot.figure()
+    if 'int' in str(flow.dtype):
+        flow = transform_flow(flow)
+    pyplot.imshow(flow_to_color(flow))
+    if title is not None: pyplot.title(title)
+
+    # just for visualization purposes, eliminate top 10% of flow
+    #tmp = flow[:,:,0]**2 + flow[:,:,1]**2
+    #flow[tmp > numpy.percentile(tmp, 90)] = 0
+
+    myshow()
+
+def myshow():
+    figManager = pyplot.get_current_fig_manager()
+    figManager.resize(*figManager.window.maxsize())
+    pyplot.tight_layout()
+    pyplot.show()
+    pyplot.pause(0.5)
+
+def mydisp(img):
+    pyplot.imshow(img)
+    pyplot.show()
+    pyplot.pause(0.5)
 
 def transform_flow(flow):
     h,w = flow.shape[0:2]
@@ -48,3 +75,14 @@ def calc_bidi_errormap(flowAB,flowBA,tau=1):
     bidi_map = d > tau
 
     return bidi_map
+
+def flow_to_color(flow):
+    hsv = numpy.zeros((flow.shape[0],flow.shape[1],3),dtype=numpy.uint8)
+    hsv[...,1] = 255
+
+    mag, ang = cv2.cartToPolar(flow[...,0], flow[...,1])
+    hsv[...,0] = ang*180/numpy.pi/2
+    hsv[...,2] = cv2.normalize(mag,None,0,255,cv2.NORM_MINMAX)
+    rgb = cv2.cvtColor(hsv,cv2.COLOR_HSV2BGR)
+
+    return rgb

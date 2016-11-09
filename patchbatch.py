@@ -21,7 +21,7 @@ def calc_descs(img1_filename, img2_filename, model_name):
     """ given two image files and a CNN model name, calculates the dense descriptor tensor of both images
         img1_filename - full path of source image
         img2_filename - full path of target image
-        model_name - name of the trained CNN to use, out of the supported models """
+        model_name - name of the trained CNN to use, out of the supported models, documented in pb_Models """
 
     net_name, weights_filename, eparams_filename = Models.nets[model_name]
     nn_model, theano_func = NN.get_net_and_funcs(net_name, batch_size, weights_filename, eparams_filename)
@@ -132,6 +132,36 @@ def calc_flow_and_cost(img1_descs, img2_descs, pm_params, eliminate_bidi_errors 
         cost_res = costs[0]
 
     return flow_res, cost_res
+
+def calc_flow(img1_filename, img2_filename, model_name, output_filename, bidi=False):
+    """ Given two input filenames, model_name and output_filename return+save flow res
+        img1_filename - filename of source image
+        img2_filename - filename of target image
+        model_name - name of the trained CNN to use, out of the supported models documented in pb_Models
+        output_filename - filename of output pickle file, containing either flowAB or flowAB and flowBA depennding on bidi flag
+        bidi - whether to compute flowAB and flowBA and do a bidirectional consistency check
+
+        Returns:
+            (flowAB) or (flowAB and flowBA) depending on bidi flag """
+
+    if 'KITTI' in model_name:
+        pm_params = (2, 5, 10, 500) # pm_iters, pm_random_search_iters, rand_max_h, rand_max_w
+    elif 'MPI' in model_name:
+        pm_params = (2, 20, 10, 10)
+
+    print 'Calculating descriptors...'
+    img_descs = calc_descs(img1_filename, img2_filename, model_name)
+    print 'Calculating flow fields and matching cost'
+    flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], pm_params, bidi)
+
+    print 'Saving flow to', output_filename
+    with open(output_filename, 'wb') as f:
+        pickle.dump(flow_res, f)
+
+    print 'flow coverage percentage: %.2f' % (numpy.sum(flow_res[:,:,2]) / (flow_res.shape[0] * flow_res.shape[1]))
+
+    return flow_res
+
 
 if __name__ == '__main__':
 
