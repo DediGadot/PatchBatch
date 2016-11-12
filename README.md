@@ -50,6 +50,10 @@ If the output_path does not exist, it will be created. In it will be placed the 
 * (If the --descs option was used) descs.pickle - 
   * A list with two [h,w,#d] numpy arrays, the first contains descriptors per each pixel of img1, and the second the same for img2
 
+You can also use `benchmark_kitti.py` to run a full benchmark on a folder with KITTI images.
+
+For now, the EpicFlow extension is not yet implemented - so what you're getting is a pure PatchBatch descriptors + PatchMatch result.
+
 Credits
 -------
 The PatchBatch pipeline couldn't be achieved without the following great software pieces:
