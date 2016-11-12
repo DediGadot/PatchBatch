@@ -33,11 +33,15 @@ def calc_descs(img1_filename, img2_filename, model_name):
         if DEBUG:
             img = cv2.resize(img, (img.shape[1]/4, img.shape[0]/4))
         h,w = img.shape
-        print 'image shape before reflect', img.shape
+        # normalize image
+        img = ((img.astype(numpy.float32) - numpy.mean(img)) / numpy.std(img))
+        print 'img normalized, mean %.2f std %.2f' % (numpy.mean(img), numpy.std(img))
 
         # reflect borders
+        print 'image shape before reflect', img.shape
         img = cv2.copyMakeBorder(img,patch_size/2,patch_size/2,patch_size/2,patch_size/2,cv2.BORDER_REFLECT_101)
         print 'image shape after reflect', img.shape
+
 
         # extract patches and reshape
         patches = image.extract_patches_2d(img, (patch_size, patch_size))
@@ -154,9 +158,10 @@ def calc_flow(img1_filename, img2_filename, model_name, output_filename, bidi=Fa
     print 'Calculating flow fields and matching cost'
     flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], pm_params, bidi)
 
-    print 'Saving flow to', output_filename
-    with open(output_filename, 'wb') as f:
-        pickle.dump(flow_res, f)
+    if output_filename is not None:
+        print 'Saving flow to', output_filename
+        with open(output_filename, 'wb') as f:
+            pickle.dump(flow_res, f)
 
     print 'flow coverage percentage: %.2f' % (numpy.sum(flow_res[:,:,2]) / (flow_res.shape[0] * flow_res.shape[1]))
 

@@ -2,6 +2,35 @@ import numpy
 import matplotlib.pyplot as pyplot
 import cv2
 
+def benchmark_flow(flow, gt_flow, debug=False, tau=3):
+    valid_inds = gt_flow[:,:,2] == 1
+    valid_flow = flow[valid_inds, :2]
+    valid_gt = gt_flow[valid_inds, :2]
+
+    euc_err = numpy.sqrt(numpy.sum((valid_flow-valid_gt)**2, axis=1))
+
+    perc_valid = float(valid_gt.shape[0]) / (gt_flow.shape[0] * gt_flow.shape[1])
+    avg_err = numpy.mean(euc_err)
+    perc_above_tau = float(numpy.sum(euc_err > tau)) / valid_gt.shape[0]
+
+    print 'avg_err %.2f perc_above_tau %.2f perc_valid %.2f' % (avg_err, perc_above_tau, perc_valid)
+
+    if debug:
+        pyplot.figure()
+
+        pyplot.subplot(2,2,1)
+        pyplot.imshow(flow_to_color(flow[:,:,:2]))
+        pyplot.subplot(2,2,2)
+        pyplot.imshow(flow_to_color(gt_flow[:,:,:2]))
+
+        pyplot.subplot(2,1,2)
+        tau_map = numpy.sum((flow[:,:,:2] - gt_flow[:,:,:2])**2, axis=2)
+        tau_map = tau_map > tau
+        non_valid_inds = gt_flow[:,:,2] != 1
+        tau_map[non_valid_inds] = 0
+        pyplot.imshow(tau_map)
+        myshow()
+
 def disp_flow(flow,title=None):
     pyplot.figure()
     if 'int' in str(flow.dtype):
@@ -22,8 +51,10 @@ def myshow():
     pyplot.show()
     pyplot.pause(0.5)
 
-def mydisp(img):
+def mydisp(img, title=None):
     pyplot.imshow(img)
+    if title is not None:
+        pyplot.title(title)
     pyplot.show()
     pyplot.pause(0.5)
 
