@@ -19,7 +19,15 @@ nets = {'KITTI2015_CENTSD_ACCURATE' : ['model_CENTSD_33conv',
 
         'KITTI2012_CENTSD_ACCURATE' : ['model_CENTSD_33conv',
                                        cur_dir + '/weights/KITTI2012_ACCURATE/241015_080511PAPERKITTI2012-model_drlim7_33conv_allconv_neg1_8_m100_epoch4000_adadelta_testsamples800k_impdrlimv3.yaml-best-test-weights.pickle',
-                                       cur_dir + '/weights/KITTI2012_ACCURATE/241015_080511-eparams-test.pickle']}
+                                       cur_dir + '/weights/KITTI2012_ACCURATE/241015_080511-eparams-test.pickle'],
+
+        'KITTI2015_SPCI' : ['model_CENTSD_33conv',
+                                       cur_dir + '/weights/KITTI2015_SPCI/111016_151719PAPERKITTI2015-model_drlim7_33conv_elu_allconv_neg1_8_m100_epoch4000_adadelta_testsamples200k_hingelosssd_p71_normsamp_sp_load_k15.yaml-best-test-weights.pickle',
+                                       cur_dir + '/weights/KITTI2015_SPCI/111016_151719-eparams-test.pickle'],
+
+        'KITTI2012_SPCI' : ['model_CENTSD_33conv',
+                                       cur_dir + '/weights/KITTI2012_SPCI/131016_180941PAPERKITTI2012-model_drlim7_33conv_elu_allconv_neg1_8_m100_epoch4000_adadelta_testsamples200k_hingelosssd_p71_normsamp_sp_load.yaml-best-test-weights.pickle',
+                                       cur_dir + '/weights/KITTI2012_SPCI/131016_180941-eparams-test.pickle']}
 
 def layer_factory(in_layer, layer_type, **kwargs):
     """ Given an input layer and parameters, creates a Lasagen layer """
