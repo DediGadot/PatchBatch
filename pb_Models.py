@@ -7,7 +7,6 @@ import os
 
 leaky_param = 0.1
 in_channels = 1
-patch_size = 51
 border_mode = 'valid'
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
@@ -21,11 +20,11 @@ nets = {'KITTI2015_CENTSD_ACCURATE' : ['model_CENTSD_33conv',
                                        cur_dir + '/weights/KITTI2012_ACCURATE/241015_080511PAPERKITTI2012-model_drlim7_33conv_allconv_neg1_8_m100_epoch4000_adadelta_testsamples800k_impdrlimv3.yaml-best-test-weights.pickle',
                                        cur_dir + '/weights/KITTI2012_ACCURATE/241015_080511-eparams-test.pickle'],
 
-        'KITTI2015_SPCI' : ['model_CENTSD_33conv',
+        'KITTI2015_SPCI' : ['model_CENTSD_33conv_elu',
                                        cur_dir + '/weights/KITTI2015_SPCI/111016_151719PAPERKITTI2015-model_drlim7_33conv_elu_allconv_neg1_8_m100_epoch4000_adadelta_testsamples200k_hingelosssd_p71_normsamp_sp_load_k15.yaml-best-test-weights.pickle',
                                        cur_dir + '/weights/KITTI2015_SPCI/111016_151719-eparams-test.pickle'],
 
-        'KITTI2012_SPCI' : ['model_CENTSD_33conv',
+        'KITTI2012_SPCI' : ['model_CENTSD_33conv_elu',
                                        cur_dir + '/weights/KITTI2012_SPCI/131016_180941PAPERKITTI2012-model_drlim7_33conv_elu_allconv_neg1_8_m100_epoch4000_adadelta_testsamples200k_hingelosssd_p71_normsamp_sp_load.yaml-best-test-weights.pickle',
                                        cur_dir + '/weights/KITTI2012_SPCI/131016_180941-eparams-test.pickle']}
 
@@ -98,10 +97,16 @@ def layer_factory(in_layer, layer_type, **kwargs):
 
     return output_layer
 
-def model_CENTSD_33conv(batch_size,FAST_network=False, FAST_imgheight=None, FAST_imgwidth=None):
+def model_CENTSD_33conv(patch_size, batch_size, FAST_network=False, FAST_imgheight=None, FAST_imgwidth=None, nonlin_func='leaky'):
     """ Describes the main network used in the PatchBatch paper """
 
-    nonlin = nonlinearities.LeakyRectify(leaky_param)
+    if nonlin_func == 'leaky':
+        nonlin = nonlinearities.LeakyRectify(leaky_param)
+    elif nonlin_func == 'elu':
+        nonlin = nonlinearities.elu
+    else:
+        print 'Error! Unsupported non-linearity function'
+        return
 
     if FAST_network:
         l_in0 = layers.InputLayer(
@@ -157,4 +162,12 @@ def model_CENTSD_33conv(batch_size,FAST_network=False, FAST_imgheight=None, FAST
 
     return layer
 
-all_models = {'model_CENTSD_33conv' : model_CENTSD_33conv}
+
+def model_CENTSD_33conv_elu(batch_size,FAST_network=False, FAST_imgheight=None, FAST_imgwidth=None):
+    """ creates a CENTSD_33conv model with elu nonlinearity """
+
+    return model_CENTSD_33conv(batch_size, FAST_network, FAST_imgheight, FAST_imgwidth, nonlin_func = 'elu')
+
+
+all_models = {'model_CENTSD_33conv' : model_CENTSD_33conv,
+              'model_CENTSD_33conv_elu' : model_CENTSD_33conv_elu}

@@ -83,13 +83,12 @@ def get_descriptors(nn_model, theano_func, patches, batch_size, patch_size):
         descs.append(cur_descs.squeeze())
 
     res = numpy.vstack(descs)
-    desc_size = res.shape[-1]
-    res = res.reshape(h, w, 1, desc_size)
+    res = res.reshape(h, w, 1, -1)
 
     return res
 
 
-def get_net_and_funcs(net_name, batch_size, weights_filename, eparams_filename):
+def get_net_and_funcs(net_name, patch_size, batch_size, weights_filename, eparams_filename):
     """ Creates a Lasagne network + theano function given a model name
             net_name - one of the supported models for KITTI2012, KITTI2015 and MPI-Sintel
             batch_size - the batch size
@@ -101,7 +100,7 @@ def get_net_and_funcs(net_name, batch_size, weights_filename, eparams_filename):
 
 
     print 'Creating NN', net_name
-    nn_model = Models.all_models[net_name](batch_size)
+    nn_model = Models.all_models[net_name](patch_size, batch_size)
 
     print 'Describing network:'
     describe_network(nn_model)

@@ -14,17 +14,15 @@ import os
 import cPickle as pickle
 
 DEBUG = False
-patch_size = 51
-batch_size = 256
 
-def calc_descs(img1_filename, img2_filename, model_name):
+def calc_descs(img1_filename, img2_filename, model_name, patch_size, batch_size):
     """ given two image files and a CNN model name, calculates the dense descriptor tensor of both images
         img1_filename - full path of source image
         img2_filename - full path of target image
         model_name - name of the trained CNN to use, out of the supported models, documented in pb_Models """
 
     net_name, weights_filename, eparams_filename = Models.nets[model_name]
-    nn_model, theano_func = NN.get_net_and_funcs(net_name, batch_size, weights_filename, eparams_filename)
+    nn_model, theano_func = NN.get_net_and_funcs(net_name, patch_size, batch_size, weights_filename, eparams_filename)
 
     img_descs = []
     for img_filename in [img1_filename, img2_filename]:
@@ -137,7 +135,7 @@ def calc_flow_and_cost(img1_descs, img2_descs, pm_params, eliminate_bidi_errors 
 
     return flow_res, cost_res
 
-def calc_flow(img1_filename, img2_filename, model_name, output_filename, bidi=False):
+def calc_flow(img1_filename, img2_filename, model_name, output_filename, patch_size=51, batch_size=256, bidi=False):
     """ Given two input filenames, model_name and output_filename return+save flow res
         img1_filename - filename of source image
         img2_filename - filename of target image
@@ -154,7 +152,7 @@ def calc_flow(img1_filename, img2_filename, model_name, output_filename, bidi=Fa
         pm_params = (2, 20, 10, 10)
 
     print 'Calculating descriptors...'
-    img_descs = calc_descs(img1_filename, img2_filename, model_name)
+    img_descs = calc_descs(img1_filename, img2_filename, model_name, patch_size, batch_size)
     print 'Calculating flow fields and matching cost'
     flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], pm_params, bidi)
 
@@ -168,8 +166,7 @@ def calc_flow(img1_filename, img2_filename, model_name, output_filename, bidi=Fa
     return flow_res
 
 
-if __name__ == '__main__':
-
+def main(patch_size=51, batch_size=256):
     parser = argparse.ArgumentParser(description = 'PatchBatch Optical Flow algorithm')
     parser.add_argument('img1_filename', help = 'Filename (+path) of the source image')
     parser.add_argument('img2_filename', help = 'Filename (+path) of the target image')
@@ -192,6 +189,9 @@ if __name__ == '__main__':
         print 'Error! Unsupported pm_params'
         sys.exit()
 
+    if 'SPCI' in parser.model_name:
+        patch_size = 71
+        batch_size = 255
 
     #model_name = 'KITTI2012_CENTSD_ACCURATE'
     #img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
@@ -206,7 +206,7 @@ if __name__ == '__main__':
         print 'DEBUG mode is', DEBUG
 
     print 'Calculating descriptors...'
-    img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name)
+    img_descs = calc_descs(parser.img1_filename, parser.img2_filename, parser.model_name, patch_size, batch_size)
     print 'Calculating flow fields and matching cost'
     flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], pm_params, parser.bidi)
 
@@ -224,3 +224,7 @@ if __name__ == '__main__':
             pickle.dump(img_descs, f)
 
     kittitool.flow_visualize(flow_res, mode='Y')
+
+
+if __name__ == '__main__':
+    main()
