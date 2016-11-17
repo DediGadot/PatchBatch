@@ -40,6 +40,8 @@ To run the PatchBatch pipeline, use the following syntax:
 Currently supported models:
 * KITTI2012_CENTSD_ACCURATE
 * KITTI2015_CENTSD_ACCURATE
+* KITTI2012_SPCI
+* KITTI2015_SPCI
 
 If the output_path does not exist, it will be created. In it will be placed the following:  
 * flow.pickle - 

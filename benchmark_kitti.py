@@ -5,7 +5,7 @@ import glob
 import kittitool
 import pb_utils as utils
 
-def bench_kitti(images_path, GT_path, model_name):
+def bench_kitti(images_path, GT_path, model_name, patch_size, batch_size):
     """ Used for easily benchmarking kitti, using kitti's file structure
         images_path - images path, with image pairs looking like: 000000_10.png, 000000_11.png for example
         GT_path - ground truth path, looking like 000000_10.png
@@ -22,7 +22,8 @@ def bench_kitti(images_path, GT_path, model_name):
         pb_flow = patchbatch.calc_flow(img1_filename, img2_filename, model_name, None, False)
         utils.benchmark_flow(pb_flow, gt_flow, debug=False)
 
-if __name__ == '__main__':
+
+def main(patch_size=51, batch_size=256):
     parser = argparse.ArgumentParser(description = 'PatchBatch KITTI benchmark pipeline')
     parser.add_argument('images_path', help = 'input images path')
     parser.add_argument('gt_path', help = 'ground truth path')
@@ -30,4 +31,12 @@ if __name__ == '__main__':
 
     parser = parser.parse_args()
 
-    bench_kitti(parser.images_path, parser.gt_path, parser.model_name)
+    if 'SPCI' in parser.model_name:
+        patch_size = 71
+        batch_size = 255
+
+    bench_kitti(parser.images_path, parser.gt_path, parser.model_name, patch_size, batch_size)
+
+
+if __name__ == '__main__':
+    main()
