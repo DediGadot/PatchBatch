@@ -8,7 +8,9 @@ MPI-Sintel, though ranked 1st for small displacements.
 
 The code was developed on Ubuntu 14.04, using Theano+Lasagne+OpenCV. You can see the performance it achieved on the [KITTI2012](http://www.cvlibs.net/datasets/kitti/eval_stereo_flow.php?benchmark=flow), [KITTI2015](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow) and [MPI-Sintel](http://sintel.is.tue.mpg.de/) optical flow scoreboards.  
 
-For now only the ACCURATE networks have been iuploaded, the FAST network will follow.
+For now only the ACCURATE networks have been uploaded, the FAST network will follow.
+
+**UPDATE** - New trained models (SPCI) are available. Based on **Optical Flow Requires Multiple Strategies (but only one network)** by Tal Schuster, Lior Wolf and Dedi Gadot [(link)](https://arxiv.org/abs/1611.05607v1).
 
 Installation Instructions
 -------------------------
