@@ -13,7 +13,7 @@ def benchmark_flow(flow, gt_flow, debug=False, tau=3):
     avg_err = numpy.mean(euc_err)
     perc_above_tau = float(numpy.sum(euc_err > tau)) / valid_gt.shape[0]
 
-    print 'avg_err %.2f perc_above_tau %.2f% perc_valid %.2f%' % (avg_err, perc_above_tau*100, perc_valid*100)
+    print 'avg_err %.2f perc_above_tau %.2f perc_valid %.2f' % (avg_err, perc_above_tau*100, perc_valid*100)
 
     if debug:
         pyplot.figure()
