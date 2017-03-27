@@ -18,7 +18,7 @@ Installation Instructions
 3. Copy the cv2.so file which was generated in step 1 into `env/lib/python2.7/site-packages`
 4. Clone this repository by typing: `git clone https://github.com/DediGadot/PatchBatch`
 5. Install all the python packages described in Requirements.txt by typing: `pip install -r Requirements.txt`
-6. Make sure to configurae Theano to your needs (GPU usage preferred)
+6. Make sure to configure Theano to your needs (GPU usage preferred)
 
 The PatchBatch Pipeline
 -----------------------
