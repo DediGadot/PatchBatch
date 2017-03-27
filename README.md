@@ -1,4 +1,3 @@
-** still a work in progress, to be updated in the coming weeks **  
 PatchBatch - a Batch Augmented Loss for Optical Flow
 ====================================================
 This is an initial commit implementing **PatchBatch - a Batch Augmented Loss for Optical Flow** by Dedi Gadot and Lior Wolf from Tel Aviv University [(link)](http://www.cv-foundation.org/openaccess/content_cvpr_2016/html/Gadot_PatchBatch_A_Batch_CVPR_2016_paper.html), published at **CVPR, 2016**.  
