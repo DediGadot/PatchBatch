@@ -9,7 +9,7 @@ The code was developed on Ubuntu 14.04, using Theano+Lasagne+OpenCV. You can see
 
 For now only the ACCURATE networks have been uploaded, the FAST network will follow.
 
-**UPDATE** - New trained models (SPCI) are available. Based on **Optical Flow Requires Multiple Strategies (but only one network)** by Tal Schuster, Lior Wolf and Dedi Gadot [(link)](https://arxiv.org/abs/1611.05607v1).
+**UPDATE** - New trained models (SPCI) are available. Based on **Optical Flow Requires Multiple Strategies (but only one network)** by Tal Schuster, Lior Wolf and Dedi Gadot [(link)] published at **CVPR, 2017** (https://arxiv.org/abs/1611.05607v1).
 
 Installation Instructions
 -------------------------
