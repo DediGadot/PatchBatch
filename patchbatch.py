@@ -193,14 +193,6 @@ def main(patch_size=51, batch_size=256):
         patch_size = 71
         batch_size = 255
 
-    #model_name = 'KITTI2012_CENTSD_ACCURATE'
-    #img1_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_10.png'
-    #img2_filename = '/home/MAGICLEAP/dgadot/patchflow_data/training/image_0/000000_11.png'
-    #output_path = '/tmp'
-
-    #img_descs = calc_descs(img1_filename, img2_filename, model_name)
-    #flow_res, cost_res = calc_flow_and_cost(img_descs[0], img_descs[1], True)
-
     if parser.debug:
         DEBUG = True
         print 'DEBUG mode is', DEBUG
