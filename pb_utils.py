@@ -31,6 +31,8 @@ def benchmark_flow(flow, gt_flow, debug=False, tau=3):
         pyplot.imshow(tau_map)
         myshow()
 
+    return avg_err, perc_above_tau
+
 def disp_flow(flow,title=None):
     pyplot.figure()
     if 'int' in str(flow.dtype):
