@@ -16,11 +16,16 @@ def bench_kitti(images_path, GT_path, model_name, patch_size, batch_size):
     images_list = sorted(glob.glob(images_path + '/*.png'))
     gt_list = sorted(glob.glob(GT_path + '/*.png'))
 
+    all_avg_err = []
+    all_perc_above_tau = []
     for img1_filename, img2_filename, gt_filename in zip(images_list[::2], images_list[1::2], gt_list):
         print 'Analyzing', img1_filename.split('/')[-1],img2_filename.split('/')[-1]
         gt_flow = kittitool.flow_read(gt_filename)
         pb_flow = patchbatch.calc_flow(img1_filename, img2_filename, model_name, None, patch_size, batch_size, False)
-        utils.benchmark_flow(pb_flow, gt_flow, debug=False)
+        avg_err, perc_above_tau = utils.benchmark_flow(pb_flow, gt_flow, debug=False)
+        all_avg_err.append(avg_err)
+        all_perc_above_tau.append(perc_above_tau)
+        print '--- Aggregated: avg_err %.2f perc_above_tau %.2f' % (numpy.mean(all_avg_err), numpy.mean(all_perc_above_tau)*100)
 
 
 def main(patch_size=51, batch_size=256):

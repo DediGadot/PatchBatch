@@ -2,23 +2,23 @@ PatchBatch - a Batch Augmented Loss for Optical Flow
 ====================================================
 This is an initial commit implementing **PatchBatch - a Batch Augmented Loss for Optical Flow** by Dedi Gadot and Lior Wolf from Tel Aviv University [(link)](http://www.cv-foundation.org/openaccess/content_cvpr_2016/html/Gadot_PatchBatch_A_Batch_CVPR_2016_paper.html), published at **CVPR, 2016**.  
 
+SPCI models are based on **Optical Flow Requires Multiple Strategies (but only one network)** by Tal Schuster, Lior Wolf and Dedi Gadot [(link)](http://openaccess.thecvf.com/content_cvpr_2017/html/Schuster_Optical_Flow_Requires_CVPR_2017_paper.html) published at **CVPR, 2017**. 
+
 PatchBatch achieved state-of-the-art results in 2016 on the KITTI (2012+2015) Optical Flow benchmarks and was ranked 6th on
 MPI-Sintel, though ranked 1st for small displacements.
 
 The code was developed on Ubuntu 14.04, using Theano+Lasagne+OpenCV. You can see the performance it achieved on the [KITTI2012](http://www.cvlibs.net/datasets/kitti/eval_stereo_flow.php?benchmark=flow), [KITTI2015](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow) and [MPI-Sintel](http://sintel.is.tue.mpg.de/) optical flow scoreboards.  
 
-For now only the ACCURATE networks have been uploaded, the FAST network will follow.
-
-**UPDATE** - New trained models (SPCI) are available. Based on **Optical Flow Requires Multiple Strategies (but only one network)** by Tal Schuster, Lior Wolf and Dedi Gadot [(link)](https://arxiv.org/abs/1611.05607v1) published at **CVPR, 2017**. 
 
 Installation Instructions
 -------------------------
-1. Download and compile OpenCV 2.4.10, with python2.7 support
+1. Clone this repository by typing: `git clone https://github.com/DediGadot/PatchBatch`
 2. Create a python (2.7) virtualenv, by typing: `virtualenv --no-site-packages env`
-3. Copy the cv2.so file which was generated in step 1 into `env/lib/python2.7/site-packages`
-4. Clone this repository by typing: `git clone https://github.com/DediGadot/PatchBatch`
-5. Install all the python packages described in Requirements.txt by typing: `pip install -r Requirements.txt`
-6. Make sure to configure Theano to your needs (GPU usage preferred)
+3. Activate virtualenv: `source env/bin/activate' 
+4. Install all the python packages described in Requirements.txt by typing: `pip install -r Requirements.txt`
+5. Make sure to configure Theano to your needs (GPU usage preferred - tested with OpenBlas and CuDNN 5.1)
+* To check theano installation - run `python -c 'import theano; theano.test()'`
+
 
 The PatchBatch Pipeline
 -----------------------
